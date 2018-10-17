@@ -22,7 +22,7 @@ function varargout = main_window(varargin)
 
 % Edit the above text to modify the response to help main_window
 
-% Last Modified by GUIDE v2.5 17-Oct-2018 22:19:11
+% Last Modified by GUIDE v2.5 17-Oct-2018 22:25:55
 
 % Begin initialization code - DO NOT EDIT
 gui_Singleton = 1;
@@ -43,7 +43,6 @@ else
 end
 % End initialization code - DO NOT EDIT
 
-
 % --- Executes just before main_window is made visible.
 function main_window_OpeningFcn(hObject, eventdata, handles, varargin)
 % This function has no output args, see OutputFcn.
@@ -59,6 +58,8 @@ global g_ignored_areas;
 set(handles.list_images, 'string', g_images.files_red);
 set(handles.list_ignored_areas, 'string', g_ignored_areas);
 set(handles.list_analyzed_areas, 'string', g_analyzed_areas);
+update_preview(handles);
+
 
 % Choose default command line output for main_window
 handles.output = hObject;
@@ -89,6 +90,8 @@ function window_CreateFcn(hObject, eventdata, handles)
 
 
 % --- Executes on selection change in list_images.
+
+
 function list_images_Callback(hObject, eventdata, handles)
 % hObject    handle to list_images (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
@@ -96,6 +99,7 @@ function list_images_Callback(hObject, eventdata, handles)
 
 % Hints: contents = cellstr(get(hObject,'String')) returns list_images contents as cell array
 %        contents{get(hObject,'Value')} returns selected item from list_images
+update_preview(handles);
 
 
 % --- Executes during object creation, after setting all properties.
@@ -123,6 +127,7 @@ if ~(out.is_valid)
 end
 insert_image_after(out, length(g_images.files_nir));
 set(handles.list_images, 'string', g_images.files_red);
+update_preview(handles);
 
 % --- Executes on button press in button_images_minus.
 function button_images_minus_Callback(hObject, eventdata, handles)
@@ -144,6 +149,7 @@ if pos <= 0
 end
 set(handles.list_images, 'value', pos);
 guidata(hObject, handles);
+update_preview(handles);
 
 % --- Executes on button press in button_images_up.
 function button_images_up_Callback(hObject, eventdata, handles)
@@ -299,6 +305,62 @@ function axes_preview_CreateFcn(hObject, eventdata, handles)
 % handles    empty - handles not created until after all CreateFcns called
 
 % Hint: place code in OpeningFcn to populate axes_preview
-axis image
 axis off
 set(hObject, 'ydir', 'normal');
+axis image
+hold on
+
+function update_preview(handles)
+% Updates preview field
+% Remove previous preview
+global g_analyzed_areas;
+global g_ignored_areas;
+
+cla(handles.axes_preview); % clear axes
+if isempty(get(handles.list_images, 'string'))
+	return;
+end
+
+st_image = get_image(get(handles.list_images,'value'));
+matrix_image = flipud(imread(st_image.red));
+[h,w,nch] = size(matrix_image);
+imresol = [w,h];
+bound = st_image.bound;
+
+% Show image
+image(matrix_image, 'parent', handles.axes_preview);
+
+% Show analyzed areas
+for i = g_analyzed_areas
+	xvec = [];
+	yvec = [];
+	for j = 1:length(i)
+		[x,y] = lonlat2xy(i{j}, imresol, bound);
+		xvec = [xvec, x];
+		yvec = [yvec, y];
+	end
+	plot(xvec, yvec, 'parent', handes.axes_preview, 'linewidth', 2, ...
+		'color', [0 .8 0]);
+end
+
+% Show ignored areas
+for i = g_ignored_areas
+	xvec = [];
+	yvec = [];
+	for j = 1:length(i)
+		[x,y] = lonlat2xy(i{j}, imresol, bound);
+		xvec = [xvec, x];
+		yvec = [yvec, y];
+	end
+	plot(xvec, yvec, 'parent', handes.axes_preview, 'linewidth', 2, ...
+		'color', [0 .8 0]);
+end
+
+
+
+
+
+
+
+
+

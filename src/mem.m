@@ -1,4 +1,4 @@
-% ---------- Analyzed regions ----------
+% ---------- Analyzed areas ----------
 % format: {{[lon lat], [lon lat],...}, {[lon lat], [lon lat],...}...}
 global g_analyzed_areas;
 g_analyzed_areas = {};
