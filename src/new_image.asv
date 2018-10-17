@@ -161,6 +161,7 @@ function button_ok_Callback(hObject, eventdata, handles)
 % hObject    handle to button_ok (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
+
 % ----------- Check nir file -----------
 try
 	imread(get(handles.edit_nir, 'string'));
@@ -203,9 +204,11 @@ elseif ~(left > -180 && left <= 180)
 	f_err = true;
 elseif ~(right > -180 && right <= 180)
 	f_err = true;
-elseif ~(top >= -90 && top <= 90)
+elseif
+	~(top >= -90 && top <= 90)
 	f_err = true;
-elseif ~(bottom >= -90 && bottom <= 90)
+elseif
+	~(bottom >= -90 && bottom <= 90)
 	f_err = true;
 elseif top <= bottom
 	f_err = true;
@@ -214,9 +217,8 @@ if f_err
 	msgbox('Wrong bounding rect values', 'Error', 'error');
 	return;
 end
-handles.output.bound = [left, bottom, right, top];
-% ----------- All the validation routines have been passed fuccflly -----------
-handles.output.is_valid = true;
+
+end
 
 
 
