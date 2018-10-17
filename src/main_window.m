@@ -109,7 +109,7 @@ function button_images_plus_Callback(hObject, eventdata, handles)
 % hObject    handle to button_images_plus (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
-
+out = new_image()
 
 % --- Executes on button press in button_images_minus.
 function button_images_minus_Callback(hObject, eventdata, handles)
