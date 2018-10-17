@@ -245,6 +245,7 @@ end
 handles.output.bound = [left, bottom, right, top];
 % ----------- All the validation routines have been passed fuccflly -----------
 handles.output.is_valid = true;
+close(handles.new_image);
 
 
 
