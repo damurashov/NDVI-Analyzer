@@ -165,6 +165,14 @@ function button_images_down_Callback(hObject, eventdata, handles)
 % hObject    handle to button_images_down (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
+global g_images;
+pos = get(handles.list_images, 'value');
+if pos >= length(g_images.files_red)
+	return;
+end
+swap_images(pos, pos+1);
+set(handles.list_images, 'string', g_images.files_red);
+set(handles.list_images, 'value', pos+1);
 
 
 % --- Executes on selection change in list_ignored_areas.
