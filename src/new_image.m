@@ -156,7 +156,15 @@ if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgr
 end
 
 
+
+
 % --- Executes on button press in button_ok.
+function error_edit(h_edit)
+set(h_edit, 'backgroundColor', [1 .6 .6]);
+
+function reset_edit(h_edit)
+set(h_edit, 'backgroundColor', [1 1 1]);
+
 function button_ok_Callback(hObject, eventdata, handles)
 % hObject    handle to button_ok (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
@@ -192,22 +200,42 @@ if f_err
 end
 handles.output.resolution = res;
 % ----------- Check bouding rect -----------
+reset_edit(handles.edit_left);
+reset_edit(handles.edit_right);
+reset_edit(handles.edit_top);
+reset_edit(handles.edit_bottom);
 f_err = false;
 top = str2double(get(handles.edit_top,'string'));
 bottom = str2double(get(handles.edit_bottom,'string'));
 left = str2double(get(handles.edit_left,'string'));
 right = str2double(get(handles.edit_right,'string'));
-if isnan(top) || isnan(bottom) || isnan(left) || isnan(right)
+if isnan(top)
 	f_err = true;
+	error_edit(handles.edit_top);
+elseif isnan(bottom)
+	error_edit(handles.edit_bottom);
+	f_err = true
+elseif isnan(left)
+	error_edit(handles.edit_left);
+	f_err = true
+elseif isnan(right)
+	error_edit(handles.edit_right);
+	f_err = true
 elseif ~(left > -180 && left <= 180)
+	error_edit(handles.edit_left);
 	f_err = true;
 elseif ~(right > -180 && right <= 180)
+	error_edit(handles.edit_right);
 	f_err = true;
 elseif ~(top >= -90 && top <= 90)
+	error_edit(handles.edit_top);
 	f_err = true;
 elseif ~(bottom >= -90 && bottom <= 90)
+	error_edit(handles.edit_bottom);
 	f_err = true;
 elseif top <= bottom
+	error_edit(handles.edit_top);
+	error_edit(handles.edit_bottom);
 	f_err = true;
 end
 if f_err
