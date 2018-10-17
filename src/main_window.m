@@ -22,7 +22,7 @@ function varargout = main_window(varargin)
 
 % Edit the above text to modify the response to help main_window
 
-% Last Modified by GUIDE v2.5 16-Oct-2018 14:41:00
+% Last Modified by GUIDE v2.5 17-Oct-2018 22:19:11
 
 % Begin initialization code - DO NOT EDIT
 gui_Singleton = 1;
@@ -151,6 +151,9 @@ function button_images_up_Callback(hObject, eventdata, handles)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
 global g_images;
+if isempty(get(handles.list_images,'string'))
+	return;
+end
 pos = get(handles.list_images, 'value');
 if pos <= 1
 	return;
@@ -166,6 +169,9 @@ function button_images_down_Callback(hObject, eventdata, handles)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
 global g_images;
+if isempty(get(handles.list_images,'string'))
+	return;
+end
 pos = get(handles.list_images, 'value');
 if pos >= length(g_images.files_red)
 	return;
@@ -284,3 +290,15 @@ function menu_file_quit_Callback(hObject, eventdata, handles)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
 close(handles.window);
+
+
+% --- Executes during object creation, after setting all properties.
+function axes_preview_CreateFcn(hObject, eventdata, handles)
+% hObject    handle to axes_preview (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    empty - handles not created until after all CreateFcns called
+
+% Hint: place code in OpeningFcn to populate axes_preview
+axis image
+axis off
+set(hObject, 'ydir', 'normal');
