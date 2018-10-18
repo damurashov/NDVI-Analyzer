@@ -25,7 +25,7 @@ function varargout = new_area(varargin)
 
 % Edit the above text to modify the response to help new_area
 
-% Last Modified by GUIDE v2.5 18-Oct-2018 16:19:28
+% Last Modified by GUIDE v2.5 18-Oct-2018 19:38:39
 
 % Begin initialization code - DO NOT EDIT
 gui_Singleton = 1;
@@ -80,6 +80,7 @@ if nargin>=4 && isnumeric(varargin{1})
 	image(img_matrix, 'buttonDownFcn', @new_point, ...
 		'parent', handles.axes_preview);
 	axis image;
+	axis off;
 	set(handles.axes_preview, 'ydir', 'normal');
 	hold on;
 else
@@ -110,7 +111,9 @@ varargout{1} = handles.output;
 if ~is_valid
 	msgbox('No image has been passed', 'Error', 'error');
 	close(hObject);
+	return;
 end
+delete(handles.window);
 
 
 
@@ -119,6 +122,29 @@ function button_ok_Callback(hObject, eventdata, handles)
 % hObject    handle to button_ok (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
+global polygon
+global image_resolution
+global image_struct
+if length(polygon) < 3
+	ans_continue = 'Back to window';
+	ans_cancel = 'Cancel area selection';
+	answer = questdlg('Selected area must consist of 3 or more vertices',...
+		'Wrong input',...
+		ans_continue, ans_cancel, ans_continue);
+	switch answer
+		case ans_continue
+			return;
+		case ans_cancel
+			button_cancel_Callback(hObject, eventdata, handles);
+			return;
+		case ''
+			return;
+	end
+end
+handles.output = polyxy2lonlat(polygon, image_resolution, image_struct.bound);
+guidata(hObject, handles);
+clear image_resolution plot_handler polygon image_struct
+close(handles.window);
 
 
 % --- Executes on button press in button_cancel.
@@ -126,6 +152,9 @@ function button_cancel_Callback(hObject, eventdata, handles)
 % hObject    handle to button_cancel (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
+close(handles.window);
+guidata(hObject,handles);
+clear image_resolution plot_handler polygon image_struct
 
 
 % --- Executes on button press in button_reset.
@@ -133,6 +162,10 @@ function button_reset_Callback(hObject, eventdata, handles)
 % hObject    handle to button_reset (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
+global polygon;
+polygon = {};
+update_list(hObject, eventdata);
+update_plot(hObject, eventdata);
 
 
 % --- Executes on selection change in list_area.
@@ -203,6 +236,7 @@ global image_resolution
 global image_struct
 handles = guidata(h);
 if isempty(polygon)
+	set(handles.list_area, 'string', '');
 	return;
 end
 string = polygon2str(polyxy2lonlat(polygon, ...
@@ -219,6 +253,7 @@ global plot_handler
 handles = guidata(h);
 if plot_handler ~= -1
 	delete(plot_handler);
+	plot_handler = -1;
 end
 if isempty(polygon)
 	return;
