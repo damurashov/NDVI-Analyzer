@@ -81,13 +81,7 @@ function btn_save_Callback(hObject, eventdata, handles)
 % hObject    handle to btn_save (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
-if get(handles.radio_heat_map, 'value') == 0
-	handles.output = 1;
-else
-	handles.output = 0;
-end
-guidata(hObject,handles);
-close(handles.figure1);
+if get(handles.radio_heat_map
 
 
 % --- Executes on button press in btn_cancel.
@@ -95,7 +89,7 @@ function btn_cancel_Callback(hObject, eventdata, handles)
 % hObject    handle to btn_cancel (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
-close(handles.figure1);
+close(hObject);
 
 
 
