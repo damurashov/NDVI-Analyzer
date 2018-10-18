@@ -3,10 +3,14 @@ function varargout = visualization_parameters(varargin)
 %      VISUALIZATION_PARAMETERS, by itself, creates a new VISUALIZATION_PARAMETERS or raises the existing
 %      singleton*.
 %
-%      H = VISUALIZATION_PARAMETERS returns:
-%        0: visualization as heat map
-%        1: visualization by surface type
-%        -1: user cancelled input
+%      [mode mask] = VISUALIZATION_PARAMETERS returns:
+%        mode:
+%          0: visualization as heat map
+%          1: visualization by surface type
+%          -1: user cancelled input
+%        mask:
+%          true: use mask
+%          false: don't use mask
 %
 %      VISUALIZATION_PARAMETERS('CALLBACK',hObject,eventData,handles,...) calls the local
 %      function named CALLBACK in VISUALIZATION_PARAMETERS.M with the given input arguments.
@@ -24,7 +28,7 @@ function varargout = visualization_parameters(varargin)
 
 % Edit the above text to modify the response to help visualization_parameters
 
-% Last Modified by GUIDE v2.5 18-Oct-2018 22:43:30
+% Last Modified by GUIDE v2.5 19-Oct-2018 00:25:43
 
 % Begin initialization code - DO NOT EDIT
 gui_Singleton = 1;
@@ -72,7 +76,8 @@ function varargout = visualization_parameters_OutputFcn(hObject, eventdata, hand
 % handles    structure with handles and user data (see GUIDATA)
 
 % Get default command line output from handles structure
-varargout{1} = handles.output;
+varargout{1} = handles.output(1);
+varargout{2} = handles.output(2);
 delete(handles.figure1);
 
 
@@ -82,10 +87,11 @@ function btn_save_Callback(hObject, eventdata, handles)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
 if get(handles.radio_heat_map, 'value') == 0
-	handles.output = 1;
+	handles.output(1) = 1;
 else
-	handles.output = 0;
+	handles.output(1) = 0;
 end
+handles.output(2) = get(handles.check_use_mask, 'value');
 guidata(hObject,handles);
 close(handles.figure1);
 
@@ -139,4 +145,18 @@ if isequal(get(hObject, 'waitstatus'), 'waiting');
 	uiresume(hObject)
 else
 	delete(hObject)
+end
+
+
+% --- Executes on button press in check_use_mask.
+function check_use_mask_Callback(hObject, eventdata, handles)
+% hObject    handle to check_use_mask (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% Hint: get(hObject,'Value') returns toggle state of check_use_mask
+if get(hObject,'value') == true
+	set(handles.text_warning, 'visible', 'on');
+else
+	set(handles.text_warning, 'visible', 'off');
 end
