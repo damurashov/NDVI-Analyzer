@@ -192,7 +192,6 @@ function list_ignored_areas_Callback(hObject, eventdata, handles)
 % hObject    handle to list_ignored_areas (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
-update_preview(handles);
 
 % Hints: contents = cellstr(get(hObject,'String')) returns list_ignored_areas contents as cell array
 %        contents{get(hObject,'Value')} returns selected item from list_ignored_areas
@@ -226,7 +225,6 @@ if isempty(poly)
 end
 g_ignored_areas = [g_ignored_areas, {poly}];
 update_preview(handles);
-set(handles.list_ignored_areas, 'string', listpolygon2str(g_ignored_areas));
 
 
 % --- Executes on button press in button_ignored_areas_minus.
@@ -241,7 +239,6 @@ function list_analyzed_areas_Callback(hObject, eventdata, handles)
 % hObject    handle to list_analyzed_areas (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
-update_preview(handles);
 
 % Hints: contents = cellstr(get(hObject,'String')) returns list_analyzed_areas contents as cell array
 %        contents{get(hObject,'Value')} returns selected item from list_analyzed_areas
@@ -265,17 +262,6 @@ function button_analyzed_areas_plus_Callback(hObject, eventdata, handles)
 % hObject    handle to button_analyzed_areas_plus (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
-global g_analyzed_areas
-if isempty(get(handles.list_images, 'string'))
-	return;
-end
-poly = new_area(get(handles.list_images,'value'));
-if isempty(poly)
-	return;
-end
-g_analyzed_areas = [g_analyzed_areas, {poly}];
-update_preview(handles);
-set(handles.list_analyzed_areas, 'string', listpolygon2str(g_analyzed_areas));
 
 
 % --- Executes on button press in button_analyzed_areas_minus.
@@ -342,6 +328,7 @@ global g_analyzed_areas;
 global g_ignored_areas;
 color_red = [1 .4 .4];
 color_green = [.4 1 .4];
+color_blue = [.4 .4 1];
 
 cla(handles.axes_preview); % clear axes
 if isempty(get(handles.list_images, 'string'))
@@ -360,29 +347,21 @@ image(matrix_image, 'parent', handles.axes_preview);
 % Show analyzed areas
 for i = 1:length(g_analyzed_areas)
 	col = color_green;
-	linewidth = 2;
-	if get(handles.list_analyzed_areas, 'value') == i
-		linewidth = 4;
-	end
+	if (get(handles.list_analyzed_areas
 	polyxy = polylonlat2xy(g_analyzed_areas{i}, imresol, bound);
 	polyxy = [polyxy, polyxy(1)];
 	[xvec, yvec] = polygon2vectors(polyxy);
-	plot(xvec, yvec, 'parent', handles.axes_preview, 'linewidth', linewidth, ...
+	plot(xvec, yvec, 'parent', handles.axes_preview, 'linewidth', 2, ...
 		'color', col);
 end
 
 % Show ignored areas
 for i = 1:length(g_ignored_areas)
-	col = color_red;
-	linewidth = 2;
-	if get(handles.list_ignored_areas, 'value') == i
-		linewidth = 4;
-	end
 	polyxy = polylonlat2xy(g_ignored_areas{i}, imresol, bound);
 	polyxy = [polyxy, polyxy(1)];
 	[xvec, yvec] = polygon2vectors(polyxy);
-	plot(xvec, yvec, 'parent', handles.axes_preview, 'linewidth', linewidth, ...
-		'color', col);
+	plot(xvec, yvec, 'parent', handles.axes_preview, 'linewidth', 2, ...
+		'color', [1 .4 .4]);
 end
 
 

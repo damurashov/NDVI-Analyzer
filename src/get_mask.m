@@ -33,6 +33,10 @@ function [ mask ] = get_mask( img_resol, bound )
 			y_max = max(yv);
 			for x = x_min:x_max
 				for y = y_min:y_max
+					% If the point is out of image borders
+					if x < 0 || y < 0 || x > img_resol(1) || y > img_resol(2)
+						continue;
+					end
 					if inpolygon(x,y)
 						mask_an(x,y, xv, yv) = 1;
 					end
@@ -53,6 +57,10 @@ function [ mask ] = get_mask( img_resol, bound )
 			y_max = max(yv);
 			for x = x_min:x_max
 				for y = y_min:y_max
+					% If the point is out of image borders
+					if x < 0 || y < 0 || x > img_resol(1) || y > img_resol(2)
+						continue;
+					end
 					if inpolygon(x,y, xv, yv)
 						mask_ig(x,y) = 0;
 					end
