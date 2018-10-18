@@ -380,6 +380,8 @@ matrix_image = flipud(imread(st_image.red));
 [h,w,nch] = size(matrix_image);
 imresol = [w,h];
 bound = st_image.bound;
+set(handles.axes_preview, 'xlim', [0 w], 'ylim', [0 h], ...
+	'xlimmode', 'manual', 'ylimmode', 'manual');
 
 % Show image
 image(matrix_image, 'parent', handles.axes_preview);
