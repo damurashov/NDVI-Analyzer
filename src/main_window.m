@@ -127,6 +127,7 @@ if ~(out.is_valid)
 end
 insert_image_after(out, length(g_images.files_nir));
 set(handles.list_images, 'string', g_images.files_red);
+set(handles.list_images, 'value', 1);
 update_preview(handles);
 
 % --- Executes on button press in button_images_minus.
@@ -227,6 +228,7 @@ end
 g_ignored_areas = [g_ignored_areas, {poly}];
 update_preview(handles);
 set(handles.list_ignored_areas, 'string', listpolygon2str(g_ignored_areas));
+set(handles.list_ignored_areas, 'value', 1);
 
 
 % --- Executes on button press in button_ignored_areas_minus.
@@ -234,6 +236,18 @@ function button_ignored_areas_minus_Callback(hObject, eventdata, handles)
 % hObject    handle to button_ignored_areas_minus (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
+global g_ignored_areas;
+if isempty(get(handles.list_ignored_areas, 'string'))
+	return;
+end
+g_ignored_areas(get(handles.list_ignored_areas, 'value')) = [];
+set(handles.list_ignored_areas, 'string', listpolygon2str(g_ignored_areas));
+if isempty(g_ignored_areas)
+	set(handles.list_ignored_areas, 'value', 0);
+else
+	set(handles.list_ignored_areas, 'value', 1);
+end
+update_preview(handles);
 
 
 % --- Executes on selection change in list_analyzed_areas.
@@ -276,6 +290,7 @@ end
 g_analyzed_areas = [g_analyzed_areas, {poly}];
 update_preview(handles);
 set(handles.list_analyzed_areas, 'string', listpolygon2str(g_analyzed_areas));
+set(handles.list_analyzed_areas, 'value', 1);
 
 
 % --- Executes on button press in button_analyzed_areas_minus.
@@ -283,6 +298,18 @@ function button_analyzed_areas_minus_Callback(hObject, eventdata, handles)
 % hObject    handle to button_analyzed_areas_minus (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
+global g_analyzed_areas;
+if isempty(get(handles.list_analyzed_areas, 'string'))
+	return;
+end
+g_analyzed_areas(get(handles.list_analyzed_areas, 'value')) = [];
+set(handles.list_analyzed_areas, 'string', listpolygon2str(g_analyzed_areas));
+if isempty(g_analyzed_areas)
+	set(handles.list_analyzed_areas, 'value', 0);
+else
+	set(handles.list_analyzed_areas, 'value', 1);
+end
+update_preview(handles);
 
 
 % --------------------------------------------------------------------
