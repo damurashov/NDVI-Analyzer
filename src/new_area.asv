@@ -25,7 +25,7 @@ function varargout = new_area(varargin)
 
 % Edit the above text to modify the response to help new_area
 
-% Last Modified by GUIDE v2.5 18-Oct-2018 15:30:11
+% Last Modified by GUIDE v2.5 15-Oct-2018 23:00:25
 
 % Begin initialization code - DO NOT EDIT
 gui_Singleton = 1;
@@ -56,22 +56,22 @@ function new_area_OpeningFcn(hObject, eventdata, handles, varargin)
 % varargin   command line arguments to new_area (see VARARGIN)
 
 % Choose default command line output for new_area
-% handles.output = hObject;
-handles.output = {};
+handles.output = hObject;
 
 if nargin==4 && isnumeric(varargin{1})
 	handles.image_struct = get_image(int64(varargin{1}));
 	handles.is_valid = true;
 else
+% 	msgbox('No image has been passed', 'Error', 'error');
 	handles.is_valid = false;
 end
 
 % Update handles structure
 guidata(hObject, handles);
 
-if handles.is_valid
-	uiwait(handles.window);
-end
+
+% UIWAIT makes new_area wait for user response (see UIRESUME)
+% uiwait(handles.window);
 
 
 % --- Outputs from this function are returned to the command line.
@@ -81,14 +81,10 @@ function varargout = new_area_OutputFcn(hObject, eventdata, handles)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
 
+
+
 % Get default command line output from handles structure
-
 varargout{1} = handles.output;
-
-if ~(handles.is_valid)
-	msgbox('No image has been passed', 'Error', 'error');
-	close(hObject);
-end
 
 
 
@@ -150,17 +146,3 @@ function window_DeleteFcn(hObject, eventdata, handles)
 % hObject    handle to window (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
-
-
-% --- Executes when user attempts to close window.
-function window_CloseRequestFcn(hObject, eventdata, handles)
-% hObject    handle to window (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    structure with handles and user data (see GUIDATA)
-
-% Hint: delete(hObject) closes the figure
-if isequal(get(hObject, 'waitstatus'), 'waiting')
-	uiresume(hObject);
-else
-	delete(hObject);
-end

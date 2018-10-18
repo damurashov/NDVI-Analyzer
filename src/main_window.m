@@ -136,7 +136,7 @@ function button_images_minus_Callback(hObject, eventdata, handles)
 % handles    structure with handles and user data (see GUIDATA)
 global g_images;
 pos = int64(get(handles.list_images, 'value'));
-if pos == 0
+if pos <= 0
 	return;
 elseif length(g_images.files_nir) == 0
 	return;
