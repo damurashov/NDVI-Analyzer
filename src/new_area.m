@@ -25,7 +25,7 @@ function varargout = new_area(varargin)
 
 % Edit the above text to modify the response to help new_area
 
-% Last Modified by GUIDE v2.5 18-Oct-2018 15:30:11
+% Last Modified by GUIDE v2.5 18-Oct-2018 16:19:28
 
 % Begin initialization code - DO NOT EDIT
 gui_Singleton = 1;
@@ -57,19 +57,41 @@ function new_area_OpeningFcn(hObject, eventdata, handles, varargin)
 
 % Choose default command line output for new_area
 % handles.output = hObject;
+global is_valid;
+global image_resolution;
+global plot_handler;
+global polygon;
+global image_struct;
+
+image_resolution = [0, 0];
+image_struct = 0;
+polygon = {};
+plot_handler = -1;
 handles.output = {};
 
-if nargin==4 && isnumeric(varargin{1})
-	handles.image_struct = get_image(int64(varargin{1}));
-	handles.is_valid = true;
+if nargin>=4 && isnumeric(varargin{1})
+	image_struct = get_image(int64(varargin{1}));
+	img_matrix = imread(image_struct.red);
+	img_matrix = flipud(img_matrix);
+	[h, w, d] = size(img_matrix);
+	
+	image_resolution = [w,h];
+	is_valid = true;
+	image(img_matrix, 'buttonDownFcn', @new_point, ...
+		'parent', handles.axes_preview);
+	axis image;
+	set(handles.axes_preview, 'ydir', 'normal');
+	hold on;
 else
-	handles.is_valid = false;
+	is_valid = false;
 end
+
+
 
 % Update handles structure
 guidata(hObject, handles);
 
-if handles.is_valid
+if is_valid
 	uiwait(handles.window);
 end
 
@@ -82,10 +104,10 @@ function varargout = new_area_OutputFcn(hObject, eventdata, handles)
 % handles    structure with handles and user data (see GUIDATA)
 
 % Get default command line output from handles structure
-
+global is_valid
 varargout{1} = handles.output;
 
-if ~(handles.is_valid)
+if ~is_valid
 	msgbox('No image has been passed', 'Error', 'error');
 	close(hObject);
 end
@@ -125,7 +147,6 @@ function list_area_Callback(hObject, eventdata, handles)
 
 % --- Executes during object creation, after setting all properties.
 function list_area_CreateFcn(hObject, eventdata, handles)
-set(hObject, 'string', get(handles, 'userdata'));
 % hObject    handle to list_area (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    empty - handles not created until after all CreateFcns called
@@ -164,3 +185,52 @@ if isequal(get(hObject, 'waitstatus'), 'waiting')
 else
 	delete(hObject);
 end
+
+% --- Callback on image click ---
+function new_point(h,e)
+global polygon
+handles = guidata(h);
+point = get(handles.axes_preview,'currentPoint');
+point = point(1,1:2);
+polygon = [polygon, {point}];
+update_list(h,e);
+update_plot(h,e);
+
+% --- Update list ---
+function update_list(h,e)
+global polygon
+global image_resolution
+global image_struct
+handles = guidata(h);
+if isempty(polygon)
+	return;
+end
+string = polygon2str(polyxy2lonlat(polygon, ...
+	image_resolution, ...
+	image_struct.bound));
+set(handles.list_area, 'string', string);
+guidata(h, handles);
+
+
+% --- Update plot --- 
+function update_plot(h,e)
+global polygon
+global plot_handler
+handles = guidata(h);
+if plot_handler ~= -1
+	delete(plot_handler);
+end
+if isempty(polygon)
+	return;
+end
+if length(polygon) > 2
+	plotpoly = [polygon, polygon(1)];
+else
+	plotpoly = polygon;
+end
+[xvec, yvec] = polygon2vectors(plotpoly);
+plot_handler = plot(xvec, yvec, ...
+	'parent', handles.axes_preview, ...
+	'linewidth', 3, ...
+	'color', [0 .6 1]);
+guidata(h,handles);

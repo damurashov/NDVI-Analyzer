@@ -332,26 +332,16 @@ image(matrix_image, 'parent', handles.axes_preview);
 
 % Show analyzed areas
 for i = g_analyzed_areas
-	xvec = [];
-	yvec = [];
-	for j = 1:length(i)
-		[x,y] = lonlat2xy(i{j}, imresol, bound);
-		xvec = [xvec, x];
-		yvec = [yvec, y];
-	end
+	polyxy = polylonlat2xy(i);
+	[xvec, yvec] = polygon2vectors(polyxy)
 	plot(xvec, yvec, 'parent', handes.axes_preview, 'linewidth', 2, ...
 		'color', [0 .8 0]);
 end
 
 % Show ignored areas
 for i = g_ignored_areas
-	xvec = [];
-	yvec = [];
-	for j = 1:length(i)
-		[x,y] = lonlat2xy(i{j}, imresol, bound);
-		xvec = [xvec, x];
-		yvec = [yvec, y];
-	end
+	polyxy = polylonlat2xy(i);
+	[xvec, yvec] = polygon2vectors(polyxy)
 	plot(xvec, yvec, 'parent', handes.axes_preview, 'linewidth', 2, ...
 		'color', [0 .8 0]);
 end
