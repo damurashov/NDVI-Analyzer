@@ -338,7 +338,17 @@ function menu_analyze_ndvi_vizualization_Callback(hObject, eventdata, handles)
 % hObject    handle to menu_analyze_ndvi_vizualization (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
-visualization_parameters();
+if isempty(get(handles.list_images, 'string'))
+	msgbox('You should provide at least one image', 'Abort', 'warn');
+	return;
+end
+[mode, f_mask] = visualization_parameters();
+if mode == -1
+	return;
+end
+ndvi_map = get_ndvi_map(get(handles.list_images,'value'), false);
+figure;
+imshow(ndvi_map);
 
 
 % --------------------------------------------------------------------
