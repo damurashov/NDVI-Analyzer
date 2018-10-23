@@ -346,9 +346,15 @@ end
 if mode == -1
 	return;
 end
-ndvi_map = get_ndvi_map(get(handles.list_images,'value'), false);
+ndvi_map = get_ndvi_map(get(handles.list_images,'value'), f_mask);
 figure;
 imshow(ndvi_map);
+if mode == 0
+	colormap(jet);
+elseif mode == 1
+	% Visualize by surf type
+	
+end
 
 
 % --------------------------------------------------------------------

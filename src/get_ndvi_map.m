@@ -32,6 +32,5 @@ ndvi_map = (nir-red)./(nir+red);
 if f_use_mask
 	ndvi_map = ndvi_map.*get_mask([xx,yy], img_struct.bound);
 end
-ndvi_map = flipud(ndvi_map);
 end
 
