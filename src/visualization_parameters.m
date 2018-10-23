@@ -59,7 +59,8 @@ function visualization_parameters_OpeningFcn(hObject, eventdata, handles, vararg
 % varargin   command line arguments to visualization_parameters (see VARARGIN)
 
 % Choose default command line output for visualization_parameters
-handles.output = -1;
+handles.output(1) = -1;
+handles.output(2) = -1;
 
 % Update handles structure
 guidata(hObject, handles);

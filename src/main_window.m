@@ -331,7 +331,22 @@ function menu_analyze_graph_Callback(hObject, eventdata, handles)
 % hObject    handle to menu_analyze_graph (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
-
+ans_yes = 'Yes';
+ans_no = 'No';
+f_use_mask = false;
+answer = questdlg('Use mask?', 'Use mask?', ans_yes, ans_no, ans_no);
+switch answer
+	case ans_yes
+		f_use_mask = true;
+	case ans_no
+		f_use_mask = false;
+end
+ndvi_stat = get_stat_ndvi(f_use_mask);
+figure
+subplot(2,1,1);
+plot(ndvi_stat.mean_ndvi);
+subplot(2,1,2);
+plot(ndvi_stat.green_perc);
 
 % --------------------------------------------------------------------
 function menu_analyze_ndvi_vizualization_Callback(hObject, eventdata, handles)
@@ -348,33 +363,26 @@ if mode == -1
 end
 ndvi_map = get_ndvi_map(get(handles.list_images,'value'), f_mask);
 figure;
-% imshow(ndvi_map, ri);
 if mode == 0
 	ndvi_map = (ndvi_map+1)/2;
 	imshow(ndvi_map)
 	colormap(jet);
 	colorbar;
 elseif mode == 1
-	cmx = 255;
-	colors = [6/cmx, 125/cmx, 34/cmx;...% 1. High-density vegetation
-		27/cmx, 189/cmx, 65/cmx;...   % 2. Low-density vegetation
-		158/cmx, 137/cmx, 101/cmx;... % 3. Ground
-		1,1,1;...                     % 4. Clouds
-		154/cmx, 216/cmx, 220/cmx;... % 5. Snow/ice
-		16/cmx, 168/cmx, 243/cmx;...  % 6. Water
-		.25, .25, .25];               % 7. Artifical surf.: asphalt, concrete
-	
-	imap = [0.7, ...                  % High vegetation
-		0.5,...                       % Low vegetation
-		0.025,...                     % Ground
-		0,...                         % Clouds
-		-0.05,...                     % Snow
-		-0.25,...                     % Water
-		-0.5];                        % Artifical surface
-	
-	mids = diff(imap)/2 + imap;
-	cmap(1:255) = 0;
-	
+	cmx = 255;	
+	cmap(1:255,1:3) = 0;
+	for i = 1:79    cmap(i,1:3) = [6/cmx, 125/cmx, 34/cmx];    end % High veg
+	for i = 80:108  cmap(i,1:3) = [27/cmx, 189/cmx, 65/cmx];   end % Low veg
+	for i = 109:124 cmap(i,1:3) = [158/cmx, 137/cmx, 101/cmx]; end % Ground
+	for i = 125:129 cmap(i,1:3) = [1 1 1];                     end % Clouds
+	for i = 130:160 cmap(i,1:3) = [154/cmx, 216/cmx, 220/cmx]; end % Snow, ice
+	for i = 161:204 cmap(i,1:3) = [16/cmx, 168/cmx, 243/cmx];  end % Water
+	for i = 205:255 cmap(i,1:3) = [.25, .25, .25];             end % Artifical surface
+	cmap = flipud(cmap);
+	ndvi_map = (ndvi_map+1)/2;
+	imshow(ndvi_map);
+	colormap(cmap);
+	colorbar;
 end
 
 

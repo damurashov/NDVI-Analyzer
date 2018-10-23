@@ -30,7 +30,9 @@ nir = double(nir);
 red = double(red);
 ndvi_map = (nir-red)./(nir+red);
 if f_use_mask
-	ndvi_map = ndvi_map.*get_mask([xx,yy], img_struct.bound);
+	mask = flipud(get_mask([xx,yy], img_struct.bound));
+	mask(mask == 0) = nan;
+	ndvi_map = ndvi_map .* mask;
 end
 end
 
