@@ -374,13 +374,13 @@ if mode == 0
 elseif mode == 1
 	cmx = 255;	
 	cmap(1:255,1:3) = 0;
-	for i = 1:79    cmap(i,1:3) = [6/cmx, 125/cmx, 34/cmx];    end % High veg
-	for i = 80:108  cmap(i,1:3) = [27/cmx, 189/cmx, 65/cmx];   end % Low veg
-	for i = 109:124 cmap(i,1:3) = [158/cmx, 137/cmx, 101/cmx]; end % Ground
-	for i = 125:129 cmap(i,1:3) = [1 1 1];                     end % Clouds
-	for i = 130:160 cmap(i,1:3) = [154/cmx, 216/cmx, 220/cmx]; end % Snow, ice
-	for i = 161:204 cmap(i,1:3) = [16/cmx, 168/cmx, 243/cmx];  end % Water
-	for i = 205:cmax cmap(i,1:3) = [.25, .25, .25];             end % Artifical surface
+	for i = 1:38    cmap(i,1:3) = [6/cmx, 125/cmx, 34/cmx];    end % High veg
+	for i = 39:64  cmap(i,1:3) = [27/cmx, 189/cmx, 65/cmx];   end % Low veg
+	for i = 65:124 cmap(i,1:3) = [158/cmx, 137/cmx, 101/cmx]; end % Ground
+	for i = 125:127 cmap(i,1:3) = [1 1 1];                     end % Clouds
+	for i = 128:134 cmap(i,1:3) = [154/cmx, 216/cmx, 220/cmx]; end % Snow, ice
+	for i = 135:159 cmap(i,1:3) = [16/cmx, 168/cmx, 243/cmx];  end % Water
+	for i = 191:cmax cmap(i,1:3) = [.25, .25, .25];             end % Artifical surface
 	cmap = flipud(cmap);
 	ndvi_map = (ndvi_map+1)/2;
 	imshow(ndvi_map);
