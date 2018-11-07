@@ -244,17 +244,11 @@ elseif top <= bottom
 	error_edit(handles.edit_bottom);
 	f_err = true;
 end
-if left > right && (left-right >= 180) && xor(left < 0, right < 0)
-	right = right + 360;
-elseif left > right
-	error_edit(handles.edit_left);
-	error_edit(handles.edit_right);
-	f_err = true;
-end
 if f_err
 	msgbox('Wrong bounding rect values', 'Error', 'error');
 	return;
 end
+
 handles.output.bound = [left, bottom, right, top];
 % ----------- All the validation routines have been passed fuccflly -----------
 handles.output.is_valid = true;

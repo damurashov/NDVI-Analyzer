@@ -364,6 +364,10 @@ if mode == -1
 	return;
 end
 ndvi_map = get_ndvi_map(get(handles.list_images,'value'), f_mask);
+if isnan(ndvi_map)
+	msgbox('The whole area is masked. Try to disable the mask','OK','warn');
+	return;
+end
 figure;
 if mode == 0
 	ndvi_map = (ndvi_map+1)/2;
