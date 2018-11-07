@@ -345,8 +345,10 @@ ndvi_stat = get_stat_ndvi(f_use_mask);
 figure
 subplot(2,1,1);
 plot(ndvi_stat.mean_ndvi);
+title('Mean NDVI');
 subplot(2,1,2);
 plot(ndvi_stat.green_perc);
+title('Green areas percentage');
 
 % --------------------------------------------------------------------
 function menu_analyze_ndvi_vizualization_Callback(hObject, eventdata, handles)
@@ -367,6 +369,7 @@ if mode == 0
 	ndvi_map = (ndvi_map+1)/2;
 	imshow(ndvi_map)
 	colormap(jet);
+	set(gca, 'clim',[0 2]);
 	colorbar;
 elseif mode == 1
 	cmx = 255;	
@@ -377,11 +380,12 @@ elseif mode == 1
 	for i = 125:129 cmap(i,1:3) = [1 1 1];                     end % Clouds
 	for i = 130:160 cmap(i,1:3) = [154/cmx, 216/cmx, 220/cmx]; end % Snow, ice
 	for i = 161:204 cmap(i,1:3) = [16/cmx, 168/cmx, 243/cmx];  end % Water
-	for i = 205:255 cmap(i,1:3) = [.25, .25, .25];             end % Artifical surface
+	for i = 205:cmax cmap(i,1:3) = [.25, .25, .25];             end % Artifical surface
 	cmap = flipud(cmap);
 	ndvi_map = (ndvi_map+1)/2;
 	imshow(ndvi_map);
 	colormap(cmap);
+	%set(gca,'clim',[0 2]);
 	colorbar;
 end
 
